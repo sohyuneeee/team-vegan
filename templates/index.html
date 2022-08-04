@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <!-- Webpage Title -->
-    <title>비건 인 서울</title>
+    <title>VEGAN IN SEOUL</title>
 
     <!-- Required meta tags -->
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <!-- og tags & favicon -->
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <meta property="og:title" content="비건 인 서울 - 세상을 달달하게"/>
+    <meta property="og:title" content="비건 인 서울 - 지구와 함께"/>
     <meta property="og:description" content="mini project for Web Plus"/>
     <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
 
@@ -26,6 +26,7 @@
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/mystyle.css') }}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/013f0744d4.js" crossorigin="anonymous"></script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -66,18 +67,13 @@
 <section class="hero is-medium is-success">
     <div class="hero-body has-text-centered" style="padding-top:80px;padding-bottom:80px;margin:auto;">
         <a class="navbar-item" href="/">
-            <img src="{{ url_for('static', filename='image/logo.png') }}">
+            <i class="fa-solid fa-carrot fa-2x" ></i>
             <strong class="title has-text-white"
                     style="font-family: 'Stylish', sans-serif;">VEGAN IN SEOUL</strong>
         </a>
     </div>
     <nav class="navbar" role="navigation" aria-label="main navigation">
-                <div class="navbar-brand">
-                    <a class="navbar-item" href="/">
-                        {#<img src="<로고 이미지>" width="" height="">#}
-                        <i class="fa-solid fa-carrot"></i>
-                    </a>
-                </div>
+
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <a class="navbar-item" aria-label="logout"

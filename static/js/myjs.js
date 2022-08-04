@@ -40,19 +40,24 @@
 function post() {
     let store = $("#store").val()
     let star = $("#star").val()
-    let file = $("#file").val()
+    let file = $("#file")[0].files[0]
     let comment = $("#textarea-post").val()
     let today = new Date().toISOString()
+    let form_data = new FormData()
+
+    form_data.append("file_give",file)
+    form_data.append("store_give",store)
+    form_data.append("star_give",star)
+    form_data.append("comment_give",comment)
+    form_data.append("date_give",today)
+
     $.ajax({
         type: "POST",
         url: "/posting",
-        data: {
-            store_give: store,
-            file_give: file,
-            star_give: star,
-            comment_give: comment,
-            date_give: today
-        },
+        data: form_data,
+        cache: false,
+        contentType: false,
+        processData: false,
         success: function (response) {
             $("#modal-post").removeClass("is-active")
             window.location.reload()
@@ -109,6 +114,7 @@ function get_posts(username) {
                     let time_before = time2str(time_post)
                     let class_heart = post['heart_by_me'] ? "fa-heart" : "fa-heart-o"
                     let count_heart = post['count_heart']
+                    let file = post['file']
                     let star = '⭐'.repeat(post['star'])
 
                     let html_temp = `<div class="box" id="${post["_id"]}">
@@ -125,7 +131,7 @@ function get_posts(username) {
                                                         <strong>${post['nickname']}</strong> <small>@${post['username']}</small> <small>${time_before}</small>
                                                         <br>
                                                     </p>
-                                                    <p>${post['file']}</p>
+                                              <img src="./static/${file}" alt="Image" width="300px" height="300px">
                                                     <p><strong>${post['store']}</strong></p>
                                                     <p>${star}</p>
                                                     <p>${post['comment']}</p>

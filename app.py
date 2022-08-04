@@ -5,6 +5,7 @@ import hashlib
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
+import gridfs
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -12,9 +13,6 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
-import certifi
-
-ca = certifi.where()
 # client = MongoClient('localhost', 27017)
 client = MongoClient('mongodb://52.79.227.94', 27017, username="test", password="test")
 db = client.miniproject
@@ -82,14 +80,14 @@ def sign_up():
     password_receive = request.form['password_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
-        "username": username_receive,  # 아이디
+        "username": username_receive,                                # 아이디
         "nickname": nickname_receive,
-        "password": password_hash,  # 비밀번호
-        "profile_name": username_receive,  # 프로필 이름 기본값은 아이디
+        "password": password_hash,                                   # 비밀번호
+        "profile_name": username_receive,                            # 프로필 이름 기본값은 아이디
         "profile_nickname": nickname_receive,
-        "profile_pic": "",  # 프로필 사진 파일 이름
+        "profile_pic": "",                                           # 프로필 사진 파일 이름
         "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
-        "profile_info": ""  # 프로필 한 마디
+        "profile_info": ""                                           # 프로필 한 마디
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
@@ -143,16 +141,22 @@ def posting():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"username": payload["id"]})
         store_receive = request.form["store_give"]
-        file_receive = request.form["file_give"]
+        file_receive = request.files["file_give"]
         star_receive = request.form["star_give"]
         comment_receive = request.form["comment_give"]
         date_receive = request.form["date_give"]
+
+        filename = f'file-{store_receive}'
+        extension = file_receive.filename.split('.')[-1]
+        save_to = f'static/{filename}.{extension}'
+        file_receive.save(save_to)
+
         doc = {
             "username": user_info["username"],
             "nickname": user_info["nickname"],
             "profile_pic_real": user_info["profile_pic_real"],
             "store": store_receive,
-            "file": file_receive,
+            "file": f'{filename}.{extension}',
             "star": star_receive,
             "comment": comment_receive,
             "date": date_receive
@@ -207,7 +211,6 @@ def update_like():
         return jsonify({"result": "success", 'msg': 'updated', "count": count})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
-
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
